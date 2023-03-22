@@ -8,9 +8,9 @@ function isPhase(J; N, J1, nsweeps, Ts)
         push!(data, simulate!(spin_config, T, J1, J .* J1, nsweeps, 0.25))
     end
     println("--------------")
-    println("Mππ: $(data[end][3])")
+    println("Mππ: $(data[end][4] + data[end][5])")
 
-    return !isapprox(data[end][3], 0., atol = 1e-4)
+    return isapprox(data[end][4] + data[end][5], 0., atol = 1e-4)
 end
 
 function binarySearch(low, high; kwargs...)
@@ -29,5 +29,5 @@ function binarySearch(low, high; kwargs...)
     return mid
 end
 
-res = binarySearch(0., 0.6; N = 10, J1 = 4, nsweeps = 10000, Ts = 4.:-0.1:0.1)
+res = binarySearch(0., 1.; N = 10, J1 = 4, nsweeps = 5000, Ts = 4.:-0.1:0.)
 println("Jc = $(res)")

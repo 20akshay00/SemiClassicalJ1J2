@@ -10,14 +10,25 @@ using Plots, JLD
 # ╔═╡ 945a23b8-25c8-4e02-97c0-4c9274167ab9
 begin
 	ds = []
-	Js = [0.001, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+	Js = vcat(0.001, 0.05:0.05:1.1)
 	for J in Js
-		push!(ds, load("./data/ising_J2J1_$(J)_N_10_AFM_init.jld"))
+		file_name = "./data/ising_J2J1_$(J)_N_10_sweeps_10000_AFM_init.jld"
+		if !isfile(file_name)
+			file_name = "./data/ising_J2J1_$(J)_N_10_sweeps_5000_AFM_init.jld"
+		end
+		
+		push!(ds, load(file_name))
 	end
 
 	Ts = ds[1]["Ts"]
 	N = ds[1]["N"]
 end
+
+# ╔═╡ c1e1c443-42b3-47da-9f8d-cdc4fa14872b
+isfile("./data/ising_J2J1_0.1_N_10_sweeps_10000_AFM_init.jld")
+
+# ╔═╡ 38816a29-4502-488b-b220-ffc604318687
+vcat([1], [2, 3])
 
 # ╔═╡ 59881d53-ebd0-4ae8-9fea-e87ae4947dc7
 function get_matrix(ds, idx)
@@ -37,12 +48,24 @@ end;
 
 # ╔═╡ 38d15b76-10d3-4af3-89a6-f65c1319edd2
 begin
-	p1 = heatmap(Mππ, title = "(π, π)")
-	p2 = heatmap(Mπ0, title = "(π, 0) + (0, π)")
-	p3 = heatmap(ndim, title = "nDimers")
+	p1 = heatmap(Js, reverse(Ts), Mππ, xlabel = "J2/J1", ylabel = "T", xticks = 14, bottommargin = 5Plots.mm, leftmargin = 5Plots.mm, title = "(π, π)")
+	p2 = heatmap(Js, reverse(Ts), Mπ0, xlabel = "J2/J1", ylabel = "T", xticks = 14, bottommargin = 5Plots.mm, leftmargin = 5Plots.mm, title = "(π, 0) + (0, π)")
+	p3 = heatmap(Js, reverse(Ts), ndim, xlabel = "J2/J1", ylabel = "T", xticks = 14, bottommargin = 5Plots.mm, leftmargin = 5Plots.mm, title = "nDimers", foreground_color_axis=:black)
 
-	plot(p1, p2, p3, layout = (1, 3), size = (1500, 350))
+	plot(p1, p2, p3, layout = (1, 3), size = (1500, 350), bottommargin = 10Plots.mm)
 end
+
+# ╔═╡ 714b058e-ad30-4196-8b65-2f519f68e169
+ndim[1, :]
+
+# ╔═╡ ccb82bb6-f9c8-4b54-8374-8a07b8b344f3
+Js
+
+# ╔═╡ 3f96a183-464d-4906-ab73-7b5f7d4231b7
+heatmap(Js, reverse(Ts), ndim, xlabel = "J2/J1", ylabel = "T", xticks = 14, bottommargin = 5Plots.mm, leftmargin = 5Plots.mm, title = "nDimers", tick_direction = :out)
+
+# ╔═╡ 104a0b04-772c-4891-8f91-36578a1f46c6
+size(ndim)
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -61,7 +84,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.8.0"
 manifest_format = "2.0"
-project_hash = "238d80bf8fe3c0ebdd0381ea3e4fc065184ddd3b"
+project_hash = "e0e589d1c09029003ed80ccda0569724e7c3cbb3"
 
 [[deps.ArgTools]]
 uuid = "0dad84c5-d112-42e6-8d28-ef12dabb789f"
@@ -1032,8 +1055,14 @@ version = "1.4.1+0"
 # ╔═╡ Cell order:
 # ╠═210f9f10-c8ae-11ed-3ba5-99de6191cc24
 # ╠═945a23b8-25c8-4e02-97c0-4c9274167ab9
+# ╠═c1e1c443-42b3-47da-9f8d-cdc4fa14872b
+# ╠═38816a29-4502-488b-b220-ffc604318687
 # ╠═59881d53-ebd0-4ae8-9fea-e87ae4947dc7
 # ╠═9c30bc3f-907f-4214-aeb9-abbba645ce4f
 # ╠═38d15b76-10d3-4af3-89a6-f65c1319edd2
+# ╠═714b058e-ad30-4196-8b65-2f519f68e169
+# ╠═ccb82bb6-f9c8-4b54-8374-8a07b8b344f3
+# ╠═3f96a183-464d-4906-ab73-7b5f7d4231b7
+# ╠═104a0b04-772c-4891-8f91-36578a1f46c6
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
